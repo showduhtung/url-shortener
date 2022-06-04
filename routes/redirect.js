@@ -1,5 +1,6 @@
 const express = require("express");
 const Url = require("../models/Url");
+const { addYears } = require("../utilities");
 
 const router = express.Router();
 
@@ -26,12 +27,3 @@ router.get("/:code", async (req, res) => {
 });
 
 module.exports = router;
-
-function addYears(num, date = new Date()) {
-  const [year, month, day] = [
-    date.getFullYear(),
-    date.getMonth(),
-    date.getDate(),
-  ];
-  return new Date(year + num, month, day);
-}
