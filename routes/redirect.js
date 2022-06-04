@@ -1,10 +1,7 @@
-const express = require("express");
 const Url = require("../models/Url");
 const { addYears } = require("../utilities");
 
-const router = express.Router();
-
-router.get("/:code", async (req, res) => {
+async function redirect(req, res) {
   try {
     const { code } = req.params;
     let url = await Url.findOne({ code });
@@ -24,6 +21,10 @@ router.get("/:code", async (req, res) => {
   } catch (err) {
     res.status(500).json(err);
   }
-});
+}
 
-module.exports = router;
+module.exports = { redirect };
+
+// router.get("/:code", redirect);
+
+// module.exports = router;

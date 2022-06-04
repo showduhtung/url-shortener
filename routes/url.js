@@ -1,10 +1,7 @@
-const express = require("express");
 const { constructValidUrl, createRandomCode } = require("../utilities/index");
 const Url = require("../models/Url");
 
-const router = express.Router();
-
-router.post("/", async (req, res) => {
+async function saveUrl(req, res) {
   let { url: link } = req.body;
   link = constructValidUrl(link);
   try {
@@ -22,6 +19,6 @@ router.post("/", async (req, res) => {
   } catch (err) {
     res.status(500).json(err);
   }
-});
+}
 
-module.exports = router;
+module.exports = { saveUrl };
