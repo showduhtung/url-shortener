@@ -39,6 +39,7 @@ build/Release
 
 # Dependency directories
 client/node_modules
+client/build/
 node_modules/
 jspm_packages/
 
