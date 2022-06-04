@@ -1,4 +1,4 @@
-const { constructValidUrl, createRandomCode } = require("../utilities/index");
+const { constructValidUrl, ensureUniqueCode } = require("../utilities/index");
 const Url = require("../models/Url");
 
 async function saveUrl(req, res) {
@@ -9,7 +9,7 @@ async function saveUrl(req, res) {
     if (count >= 241100) {
       return res.status(507).json({ message: "Database is overloaded" });
     }
-    const code = await createRandomCode(Url);
+    const code = await ensureUniqueCode(Url);
     if (code.message) return res.status(500).json({ code });
 
     let url = new Url({ code, link });

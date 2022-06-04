@@ -8,6 +8,10 @@ module.exports = {
     "!**/*.config.js",
     "!**/*.json",
   ],
-  modulePathIgnorePatterns: ["<rootDir>/client/", "<rootDir>/node_modules/"],
+  modulePathIgnorePatterns: [
+    "<rootDir>/client/",
+    "<rootDir>/node_modules/",
+    "<rootDir>/cronjobs/",
+  ],
   coverageReporters: ["text"],
 };

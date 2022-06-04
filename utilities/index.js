@@ -26,7 +26,7 @@ function addYears(num, date = new Date()) {
   return new Date(year + num, month, day);
 }
 
-async function createRandomCode(Url) {
+async function ensureUniqueCode(Url) {
   let code = generateCode();
   let url;
   while (url || url === undefined) {
@@ -46,5 +46,5 @@ module.exports = {
   constructValidUrl,
   generateCode,
   addYears,
-  createRandomCode,
+  ensureUniqueCode,
 };
