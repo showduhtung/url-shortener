@@ -8,12 +8,19 @@ import {
 } from "@mantine/core";
 import { useClipboard } from "@mantine/hooks";
 
-export const Results = ({ link }) => {
+export const Results = ({ link, ...props }) => {
   const { copied, copy } = useClipboard();
   const { classes } = useStyles();
 
   return (
-    <Paper shadow="sm" radius="md" p="xl" withBorder className={classes.root}>
+    <Paper
+      shadow="sm"
+      radius="md"
+      p="xl"
+      withBorder
+      className={classes.root}
+      {...props}
+    >
       <Text>
         Shortened URL:&nbsp;&nbsp;
         <Anchor href={`//${link}`} target="_blank">

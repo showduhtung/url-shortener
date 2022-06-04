@@ -2,7 +2,7 @@ import { createStyles, Textarea, Button } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { isValidURL } from "../utilities";
 
-export const Form = ({ handleSubmit }) => {
+export const Form = ({ handleSubmit, ...props }) => {
   const { classes } = useStyles();
   const { onSubmit, clearFieldError, getInputProps } = useForm({
     initialValues: { link: "" },
@@ -19,7 +19,7 @@ export const Form = ({ handleSubmit }) => {
   }
 
   return (
-    <form onSubmit={onSubmit(handleSubmit)}>
+    <form onSubmit={onSubmit(handleSubmit)} {...props}>
       <Textarea
         placeholder="ex. https://www.google.com"
         label="Enter Link Here"
