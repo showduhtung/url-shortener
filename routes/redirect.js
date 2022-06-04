@@ -14,17 +14,15 @@ async function redirect(req, res) {
 
       await url.save();
 
-      return res.redirect(url.link);
+      return res.redirect(301, url.link);
     } else {
+      console.log("no");
       return res.status(404).json("No url found");
     }
   } catch (err) {
+    console.log(err);
     res.status(500).json(err);
   }
 }
 
 module.exports = { redirect };
-
-// router.get("/:code", redirect);
-
-// module.exports = router;
