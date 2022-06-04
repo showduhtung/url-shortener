@@ -85,9 +85,9 @@ solve for min x where "16\*x > 241181"; x = 5 characters
 <details>
 <summary>Option 2</summary>
 
-(0-9, a-z) BASE36
+(a-z) BASE26
 
-solve for min x where "36\*x > 241181"; x = <strong>4 characters</strong>
+solve for min x where "26\*x > 241181"; x = <strong>4 characters</strong>
 
 </details>
 

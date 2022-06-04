@@ -3,19 +3,13 @@ function constructValidUrl(link) {
   return "https://" + link;
 }
 
-const BASE = [
-  { num: 26, bank: "abcdefghijklmnopqrstuvwxyz" },
-  { num: 10, bank: "0123456789" },
-];
+const alphabet = "abcdefghijklmnopqrstuvwxyz";
 
 function generateCode() {
   let code = "";
 
   function generateCharacter() {
-    let decision = Math.floor(Math.random() * 2);
-    const { bank, num } = BASE[decision];
-
-    let char = bank[Math.floor(Math.random() * num)];
+    let char = alphabet[Math.floor(Math.random() * 26)];
     code = code + char;
     if (code.length < 4) generateCharacter();
   }
