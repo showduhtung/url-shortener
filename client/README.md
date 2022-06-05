@@ -1,70 +1,148 @@
-# Getting Started with Create React App
+# URL Shortener Project
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Welcome to my URL shortener project.
 
-## Available Scripts
+## Project description
 
-In the project directory, you can run:
+<details>
+ <summary>Click to expand!</summary>
 
-### `npm start`
+### Tech Stack
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+FE: React/Mantine
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+BE: NodeJS/Express/MongoDB
 
-### `npm test`
+### Scope
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+The intention of this project is to mimic a production URL shortener application and all of its major features, to a feasible extent. Thus, many considerations were sifted through, being analyzed whether or not they would be appropriately within scope. Limitations include cost, effort and time.
 
-### `npm run build`
+### Functional requirements
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. User should be able to input a valid URL link and receive a shortened link.
+2. When accessing the shortened link, the user should be redirected to the original URL.
+3. Shortened URLs will expire after 2 years of inactivity.
+4. Shortened URLs will have an expiration date of 4 years.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Non-functional requirements
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+1. Shortened URLs must be random unique and human readable
+2. Availability (returns error if code does not exist)
 
-### `npm run eject`
+### Project features
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+According to scope, the major factor in building project feature considerations was cost. Thus, the majority of the project features consider storage as the limiting factor.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+#### 1. URL length limitation
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+| Browser | Address bar | document.location or anchor tag |
+| ------- | ----------- | ------------------------------- |
+| Chrome  | 32779       | >64k                            |
+| Android | >64k        | >64k                            |
+| Firefox | 32779       | >64k                            |
+| Safari  | 2047        | 5120                            |
+| IE11    | 2047        | 5120                            |
+| Edge 16 | 2047        | 10240                           |
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+https://stackoverflow.com/questions/417142/what-is-the-maximum-length-of-a-url-in-different-browsers
 
-## Learn More
+<strong>tl;dr- 2000 character limit</strong>
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+#### 2. Storage (character bytes)
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Database provided is a MongoDB cloud cluster with a max storage of 512MB.
 
-### Code Splitting
+##### Data Model
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+| Key            | Max size   | Data type |
+| -------------- | ---------- | --------- |
+| \_id           | 12 Bytes   | ObjectId  |
+| code           | 4 Bytes    | String    |
+| link           | 2000 Bytes | String    |
+| creationDate   | 70 Bytes   | String    |
+| expirationDate | 70 Bytes   | String    |
+| inactiveDate   | 70 Bytes   | String    |
 
-### Analyzing the Bundle Size
+max size = 2226bytes
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+<em>Note- dates should be stored as the DATE data type which would reduce it to 8bytes, but for development ease, it's stored as a string </em>
 
-### Making a Progressive Web App
+<strong>tl;dr- 512megabytes / 2226bytes = 241181 max entries</strong>
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+#### 3. URL (shortened) readability
 
-### Advanced Configuration
+Considerations for readability is to keep the code as short as possible, while still providing enough available permutations that every entry can be unique (over 241181 max entries).
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+<details>
+<summary>Option 1</summary>
 
-### Deployment
+(0-9, a-f) UUID
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+solve for min x where "16\*x > 241181"; x = 5 characters
 
-### `npm run build` fails to minify
+</details>
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+<details>
+<summary>Option 2</summary>
+
+(a-z) BASE26
+
+solve for min x where "26\*x > 241181"; x = <strong>4 characters</strong>
+
+</details>
+
+<strong>tl;dr- code max is 4 characters long</strong>
+
+#### 4. URL Expiration
+
+Another consideration based on functional requirements, is that urls can have a lifespan of max 4 years, or 2 years of inactivity. InactiveDate attribute gets updated whenever the link is accessed.
+
+### Items considered out of scope
+
+Based on scope, there were many features that were not included for the sake of either cost or development time. The following items were considered not a priority in prototyping/mimicking a production application.
+
+Provided, there are solutions that could've been made, the project does not consider:
+
+| Description               | Solution                                  |
+| ------------------------- | ----------------------------------------- |
+| Hacking Attempts          | Sanitize inputs                           |
+| Overloaded network        | Load balancers                            |
+| Most frequently used urls | Caching system like Redis                 |
+| Illegal activity          | Provide a preview option, blacklist sites |
+
+Some other features not included due to time constraints and requirement scope- date timezone unification, analytics, and privatization of urls.
+
+<em>Note- There are certainly more security concerns, but for brevity sake, we'll leave as is here. </em>
+
+</details>
+
+## How to get the project spinning
+
+1. Locate the .env file sent with this project and add to highest level of the directory next to this README.MD. The file should contain a `MONGO_URI` and `BASE_URL` key value pair.
+2. Install all the necessary dependencies
+
+```bash
+npm i && cd client/ && npm i
+```
+
+3. Build
+
+```bash
+npm run build
+```
+
+4. Run the server
+
+```bash
+cd ../ && npm run dev
+```
+
+<em>Note- The server operates as 3 servers. It acts as a web server (serves the bundled UI as static forms), runs cronjobs, and api server. This was intentionally done to reduce repository complexity and easily avoid CORS issues. </em>
+
+3. Open in browser
+
+Open browser of choice and enter in `localhost:3000`
+
+## License
+
+[MIT](https://choosealicense.com/licenses/mit/)
