@@ -139,7 +139,7 @@ cd ../ && npm run dev
 
 <em>Note- The server operates as 3 servers. It acts as a web server (serves the bundled UI as static forms), runs cronjobs, and api server. This was intentionally done to reduce repository complexity and easily avoid CORS issues. </em>
 
-3. Open in browser
+5. Open in browser
 
 Open browser of choice and enter in `localhost:3000`
 
